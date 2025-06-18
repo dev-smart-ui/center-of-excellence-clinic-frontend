@@ -1,10 +1,19 @@
 import React from "react";
 
-export interface ITaskCard{
+export interface ITask{
     id: number
     title: string
     assignee: string
-    is_claimed: boolean
+    description: string
+    status: 'TO_DO' | 'IN_PROGRESS' | 'DONE'
+    created_at: string
+    updated_at: string
+}
+
+export interface ITasks {
+    count: number
+    success: boolean
+    tasks: ITask[]
 }
 
 export interface ICardColumn{

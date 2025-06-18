@@ -1,5 +1,5 @@
-"use client"
-
+import React, {useState} from "react";
+import axios from "@/lib/axios";
 import {z} from 'zod'
 import {
     Dialog,
@@ -15,10 +15,10 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
-import {useState} from "react";
 import {Plus} from "lucide-react";
 
 export const CreateTask = () => {
+    const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
     const form = useForm<z.infer<typeof NewTaskSchema>>({
         resolver: zodResolver(NewTaskSchema),
@@ -30,7 +30,14 @@ export const CreateTask = () => {
     })
 
     const onSubmit = (values: z.infer<typeof NewTaskSchema>) => {
-        console.log(values)
+        setLoading(true)
+        axios.post(`/tasks/create/`, values)
+            .then(() => {
+                form.reset()
+                setOpen(false)
+            })
+            .catch((error) => console.log(error))
+            .finally(() => setLoading(false))
     }
 
     return (
@@ -88,7 +95,7 @@ export const CreateTask = () => {
                                 />
                             </div>
                             <DialogFooter>
-                                <Button type="submit">Create</Button>
+                                <Button type="submit" disabled={loading}>Create</Button>
                             </DialogFooter>
                         </form>
                     </Form>
